@@ -2,7 +2,9 @@ import sys
 import sqlite3
 from datetime import datetime
 from src import board, todo, todo_controller
-from pynput.keyboard import Key, Listener
+from src.view import view_util as vu
+from src.view import setting_view
+from src.view import screen
 
 
 def build_tables(con):
@@ -11,21 +13,40 @@ def build_tables(con):
             con.execute(statement.read())
 
 
+def print_menu():
+    print('q or Q Quit')
+    print('s or S Settings')
+
+
 def parse_user_input():
-    user_input = input('=>')
+    user_input = input('=>').lower()
+    if user_input == 'q':
+        sys.exit(0)
+    if user_input == 's':
+        print('settings')
+    if user_input == 'h':
+        print('help')
+    if user_input == 'hm':
+        print('hide menu')
+    if user_input == 'sm':
+        print('show menu')
 
 
 def main():
     width = 100
     con = sqlite3.connect("tickets.db", detect_types=sqlite3.PARSE_DECLTYPES)
-    board.create_board(width, con)
+    screen.run()
     """
+    while True:
+        setting_view.setting_menu()
+        vu.header('test', width)
+        print_menu()
+        parse_user_input()
+    # board.create_board(width, con)
     build_tables(con)
-    """
-    mock_todo = todo.Todo(None, "Test", 1, "test_project", "A test call", False, datetime.now(), None)
-    tc = todo_controller.Todo_Controller(con)
-    tc.create(mock_todo)
-    """
+    # mock_todo = todo.Todo(None, "Test", 1, "test_project", "A test call", False, datetime.now(), None)
+    # tc = todo_controller.Todo_Controller(con)
+    # tc.create(mock_todo)
     todos = []
     for t in tc.get_all():
         print(len(t))

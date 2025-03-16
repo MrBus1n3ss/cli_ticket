@@ -17,7 +17,7 @@ def todo_view():
     pass
 
 
-def todo_view_buffer(width: int, need_to_do: list, completed: list, buffer: list) ->:
+def todo_view_buffer(width: int, need_to_do: list, completed: list, buffer: list):
     line = f"|{'-' * (width - 2)}|"
     todo_count = len(need_to_do)
     completed_count = len(completed)
@@ -32,7 +32,7 @@ def todo_view_buffer(width: int, need_to_do: list, completed: list, buffer: list
     for i in range(0, count):
         if i > todo_count - 1:
             buffer.append(f"|{'-' * (half_width - 2)}|{'-' * (half_width -2)}|")
-            buffer.append(f"|{filler_space(half_width, 23, "")}| [x] priority: {completed[i].priority} id: {completed[i].id}{filler_space(width, 23, str(completed[i].id))}|")
+            buffer.append(f"|{filler_space(half_width, 23, "")| [x] priority: {completed[i].priority} id: {completed[i].id}{filler_space(width, 23, str(completed[i].id))}|")
             buffer.append(f"|{filler_space(half_width, 14, "")}|     title: {completed[i].title}{filler_space(width, 14, str(completed[i].title))}|")
             buffer.append(f"|{filler_space(half_width, 19, "")}|     start date: {completed[i].start_date.date()}{filler_space(width, 19, str(completed[i].start_date.date()))}|")
         elif i > completed_count - 1:
