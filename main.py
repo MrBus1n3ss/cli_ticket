@@ -1,64 +1,112 @@
 import sys
+import uuid
 import sqlite3
 from datetime import datetime
-from src import board, todo, todo_controller
-from src.view import view_util as vu
-from src.view import setting_view
-from src.view import screen
+
+
+class Project:
+    def __init__(self,
+                 id: uuid,
+                 name: str,
+                 description: str,
+                 created_at: datetime,
+                 modified_at: datetime):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.created_at = created_at
+        self.modified_at = modified_at
+
+
+class Ticket:
+    def __init__(self,
+                 id: uuid,
+                 project_id: uuid,
+                 name: str,
+                 description: str,
+                 priority: int,
+                 state: str,
+                 created_at: datetime,
+                 modified_at: datetime):
+        self.id = id
+        self.project_id = project_id
+        self.name = name
+        self.description = description
+        self.state = state
+        self.created_at = created_at
+        self.modified_at = modified_at
 
 
 def build_tables(con):
     with open("tables.sql", 'r') as statement:
-        with con:
-            con.execute(statement.read())
+        lines = statement.readlines()
+        for line in lines:
+            con.execute(line)
+            con.commit()
 
 
-def print_menu():
-    print('q or Q Quit')
-    print('s or S Settings')
+def create_project(name: str):
+    project_id = str(uuid.uuid4())
+    project_name = ""
+    description = ""
+    created_at = datetime.now()
 
 
-def parse_user_input():
-    user_input = input('=>').lower()
-    if user_input == 'q':
-        sys.exit(0)
-    if user_input == 's':
-        print('settings')
-    if user_input == 'h':
-        print('help')
-    if user_input == 'hm':
-        print('hide menu')
-    if user_input == 'sm':
-        print('show menu')
+def get_project():
+    pass
+
+
+def update_project():
+    pass
+
+
+def delete_project():
+    # TODO: need to check if tickets exist in project
+    pass
 
 
 def main():
-    width = 100
     con = sqlite3.connect("tickets.db", detect_types=sqlite3.PARSE_DECLTYPES)
-    screen.run()
-    """
-    while True:
-        setting_view.setting_menu()
-        vu.header('test', width)
-        print_menu()
-        parse_user_input()
-    # board.create_board(width, con)
     build_tables(con)
-    # mock_todo = todo.Todo(None, "Test", 1, "test_project", "A test call", False, datetime.now(), None)
-    # tc = todo_controller.Todo_Controller(con)
-    # tc.create(mock_todo)
-    todos = []
-    for t in tc.get_all():
-        print(len(t))
-        todos.append(todo.Todo(t[0], t[1], t[2], t[3], t[4], t[5], t[6], t[7]))
-    # board.create_board()
-    todos[len(todos)-1].is_done = True
-    print(todos[len(todos)-1].is_done)
-    tc.update(todos[len(todos)-1])
-    print(type(todos[len(todos)-1].id))
-    print(tc.get_one_by_id(int(todos[len(todos)-1].id)))
-    """
-    con.close()
+    # print(con.execute("SELECT * FROM state").fetchall())
+    args = sys.argv
+    if len(args) > 1:
+        command = args[1]
+        match command:
+            case "project":
+                try:
+                    operation = args[2]
+                    match operation:
+                        case "create":
+                            print("create")
+                        case "update":
+                            print("update")
+                        case "get":
+                            print("get")
+                        case "delete":
+                            print("delete")
+                except Exception:
+                    print("Missing arguments")
+                    sys.exit(0)
+            case "ticket":
+                try:
+                    operation = args[2]
+                    match operation:
+                        case "create":
+                            print("create")
+                        case "update":
+                            print("update")
+                        case "get":
+                            print("get")
+                        case "delete":
+                            print("delete")
+                except Exception:
+                    print("Missing arguments")
+                    sys.exit(0)
+
+    else:
+        print("No args selected")
+        sys.exit(0)
 
 
 if __name__ == "__main__":

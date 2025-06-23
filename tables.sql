@@ -1,2 +1,6 @@
-CREATE TABLE IF NOT EXISTS todo(id INTEGER PRIMARY KEY, title TEXT, priority INTEGER, project TEXT, description TEXT, completed TEXT, start_date TIMESTAMP, finish_date TIMESTAMP);
-CREATE TABLE IF NOT EXISTS application_properties(id INTEGER PRIMARY KEY, name TEXT, value TEXT);
+CREATE TABLE IF NOT EXISTS project(id INTEGER PRIMARY KEY, name TEXT, description TEXT, created_at TIMESTAMP, modified_at TIMESTAMP);                    
+CREATE TABLE IF NOT EXISTS ticket(id INTEGER PRIMARY KEY, project_id INTEGER, name TEXT, description TEXT, state INTEGER, priority TEXT, created_at TIMESTAMP, modified_at TIMESTAMP);
+CREATE TABLE IF NOT EXISTS state(id INTEGER PRIMARY KEY, name TEXT);
+
+
+INSERT INTO state (name) VALUES('todo'), ('hold'), ('progress'), ('testing'), ('finished');
